@@ -1,0 +1,16 @@
+{
+  "name": "audio-call-app",
+  "version": "1.0.0",
+  "description": "WebRTC Audio Call App",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "socket.io": "^4.8.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
