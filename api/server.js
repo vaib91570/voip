@@ -137,22 +137,37 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
+// const cors = require('cors');
 const cors = require('cors');
+app.use(cors({
+  origin: 'https://voip-dzlyt0ldy-vaibs-projects-4538b6ad.vercel.app', // Frontend URL
+  methods: ['GET', 'POST'],
+}));
+
 
 const app = express();
 const server = http.createServer(app);
+// const io = socketIo(server, {
+//   cors: {
+//     origin: 'https://voip-git-main-vaibs-projects-4538b6ad.vercel.app', // Ensure this is the correct origin
+//     methods: ['GET', 'POST'],
+//   },
+// });
 const io = socketIo(server, {
   cors: {
-    origin: 'https://voip-git-main-vaibs-projects-4538b6ad.vercel.app', // Ensure this is the correct origin
+    origin: 'https://voip-dzlyt0ldy-vaibs-projects-4538b6ad.vercel.app', // Frontend URL
     methods: ['GET', 'POST'],
   },
 });
+
 
 // Handle socket connections
 io.on('connection', (socket) => {
   console.log('A user connected');
 
+  // const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app');
   const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app');
+  
   socket.on('connect', () => {
     console.log('Connected to server');
   });
