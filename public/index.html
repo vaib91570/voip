@@ -26,9 +26,9 @@
   <button id="endCall" style="display:none;">End Call</button>
   <audio id="remoteAudio" autoplay></audio>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
   <script>
-    const socket = io(); // Connect to the server
+    const socket = io("https://voip-inky.vercel.app"); // Connect to the server
     let localStream;
     let peerConnection;
     const remoteAudio = document.getElementById('remoteAudio');
@@ -89,31 +89,28 @@
       endCallButton.style.display = 'none';
     });
 
-    // Handle incoming offer
     socket.on('offer', async (offer) => {
-      console.log('Received offer:', offer);
-      await getLocalStream();
-      createPeerConnection();
-      await peerConnection.setRemoteDescription(offer);
+  console.log('Received offer:', offer);
+  await getLocalStream(); // Access the local media stream (camera/microphone).
+  createPeerConnection(); // Create a new RTCPeerConnection object.
+  await peerConnection.setRemoteDescription(offer); // Set the remote peer's SDP.
 
-      // Create answer
-      const answer = await peerConnection.createAnswer();
-      await peerConnection.setLocalDescription(answer);
+  // Create an answer to the offer
+  const answer = await peerConnection.createAnswer();
+  await peerConnection.setLocalDescription(answer); // Set the local SDP.
 
-      // Send answer to server
-      socket.emit('answer', answer);
-    });
+  // Send the answer back to the signaling server
+  socket.emit('answer', answer);
+});
+socket.on('answer', (answer) => {
+  console.log('Received answer:', answer);
+  peerConnection.setRemoteDescription(answer); // Set the remote SDP.
+});
+socket.on('new-ice-candidate', (candidate) => {
+  peerConnection.addIceCandidate(new RTCIceCandidate(candidate)); // Add the candidate.
+});
 
-    // Handle incoming answer
-    socket.on('answer', (answer) => {
-      console.log('Received answer:', answer);
-      peerConnection.setRemoteDescription(answer);
-    });
 
-    // Handle incoming ICE candidates
-    socket.on('new-ice-candidate', (candidate) => {
-      peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
-    });
   </script>
 </body>
 </html>
