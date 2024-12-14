@@ -23,6 +23,7 @@
   </style>
 </head>
 <body>
+  <h1>hi </h1>
   <h1>Audio Call App</h1>
   <button id="startCall">Start Call</button>
   <button id="endCall" style="display:none;">End Call</button>
@@ -99,10 +100,12 @@
       console.log('Received answer:', answer);
       peerConnection.setRemoteDescription(answer);
     });
-
+    // hi 
     socket.on('new-ice-candidate', (candidate) => {
       peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     });
   </script>
+
+
 </body>
 </html>
