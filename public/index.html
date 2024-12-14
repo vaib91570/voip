@@ -33,12 +33,14 @@
   <!-- <script src="/socket.io/socket.io.js"></script> -->
   <!-- <script src="voip-8b04q737b-vaibs-projects-4538b6ad.vercel.app"></script> -->
   <!-- <script src="http://localhost:3001/socket.io/socket.io.js"></script> -->
-  <script src="https://voip-git-main-vaibs-projects-4538b6ad.vercel.app/socket.io/socket.io.js"></script>
-
-
+  <!-- <script src="https://voip-git-main-vaibs-projects-4538b6ad.vercel.app/socket.io/socket.io.js"></script> -->
+  
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js" integrity="sha384-vGF8tx6sw3r2UnS3CDCU4P4o9tUK6eWbdrIxJo3cC90FTIj61hg0gOYsQSFT4PL4" crossorigin="anonymous"></script>
+  
+  
   <script>
-    const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app'); // Client-side connection
-    // Connect to the server
+    const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app'); // Ensure this URL matches your deployed server
+
     let localStream;
     let peerConnection;
     const remoteAudio = document.getElementById('remoteAudio');
