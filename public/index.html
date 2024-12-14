@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -23,25 +22,16 @@
     }
   </style>
 </head>
-
 <body>
   <h1>Audio Call App</h1>
   <button id="startCall">Start Call</button>
   <button id="endCall" style="display:none;">End Call</button>
   <audio id="remoteAudio" autoplay></audio>
 
-  <!-- <script src="/socket.io/socket.io.js"></script> -->
-  <!-- <script src="voip-8b04q737b-vaibs-projects-4538b6ad.vercel.app"></script> -->
-  <!-- <script src="http://localhost:3001/socket.io/socket.io.js"></script> -->
-  <!-- <script src="https://voip-git-main-vaibs-projects-4538b6ad.vercel.app/socket.io/socket.io.js"></script> -->
-  
-  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js" integrity="sha384-vGF8tx6sw3r2UnS3CDCU4P4o9tUK6eWbdrIxJo3cC90FTIj61hg0gOYsQSFT4PL4" crossorigin="anonymous"></script>
-  
-  
-  <script>
-    // const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app'); // Ensure this URL matches your deployed server
-    const socket = io('https://voip-inky.vercel.app'); // Update to your server's live URL
+  <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
 
+  <script>
+    const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app'); // Ensure this URL matches your deployed server
 
     let localStream;
     let peerConnection;
@@ -49,7 +39,6 @@
     const startCallButton = document.getElementById('startCall');
     const endCallButton = document.getElementById('endCall');
 
-    // Get local media stream (microphone)
     async function getLocalStream() {
       try {
         localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -59,19 +48,15 @@
       }
     }
 
-    // Create a new peer connection
     function createPeerConnection() {
       peerConnection = new RTCPeerConnection();
 
-      // Add local stream tracks to peer connection
       localStream.getTracks().forEach(track => peerConnection.addTrack(track, localStream));
 
-      // When remote stream is received, play it in the audio element
       peerConnection.ontrack = (event) => {
         remoteAudio.srcObject = event.streams[0];
       };
 
-      // Handle ICE candidates
       peerConnection.onicecandidate = (event) => {
         if (event.candidate) {
           socket.emit('new-ice-candidate', event.candidate);
@@ -79,56 +64,45 @@
       };
     }
 
-    // Start a call
     startCallButton.addEventListener('click', async () => {
       await getLocalStream();
       createPeerConnection();
 
-      // Create offer
       const offer = await peerConnection.createOffer();
       await peerConnection.setLocalDescription(offer);
 
-      // Send offer to server
       socket.emit('offer', offer);
 
-      // Show end call button
       startCallButton.style.display = 'none';
       endCallButton.style.display = 'inline-block';
     });
 
-    // End the call
     endCallButton.addEventListener('click', () => {
       peerConnection.close();
       startCallButton.style.display = 'inline-block';
       endCallButton.style.display = 'none';
     });
 
-    // Handle incoming offer
     socket.on('offer', async (offer) => {
       console.log('Received offer:', offer);
       await getLocalStream();
       createPeerConnection();
       await peerConnection.setRemoteDescription(offer);
 
-      // Create answer
       const answer = await peerConnection.createAnswer();
       await peerConnection.setLocalDescription(answer);
 
-      // Send answer to server
       socket.emit('answer', answer);
     });
 
-    // Handle incoming answer
     socket.on('answer', (answer) => {
       console.log('Received answer:', answer);
       peerConnection.setRemoteDescription(answer);
     });
 
-    // Handle incoming ICE candidates  
     socket.on('new-ice-candidate', (candidate) => {
       peerConnection.addIceCandidate(new RTCIceCandidate(candidate));
     });
   </script>
 </body>
-
 </html>
