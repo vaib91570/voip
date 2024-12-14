@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +10,12 @@
       font-family: Arial, sans-serif;
       text-align: center;
     }
+
     #remoteAudio {
       width: 100%;
       height: auto;
     }
+
     button {
       padding: 10px;
       margin: 10px;
@@ -20,6 +23,7 @@
     }
   </style>
 </head>
+
 <body>
   <h1>Audio Call App</h1>
   <button id="startCall">Start Call</button>
@@ -27,9 +31,14 @@
   <audio id="remoteAudio" autoplay></audio>
 
   <!-- <script src="/socket.io/socket.io.js"></script> -->
-  <script src="voip-8b04q737b-vaibs-projects-4538b6ad.vercel.app"></script>
+  <!-- <script src="voip-8b04q737b-vaibs-projects-4538b6ad.vercel.app"></script> -->
+  <!-- <script src="http://localhost:3001/socket.io/socket.io.js"></script> -->
+  <script src="https://voip-git-main-vaibs-projects-4538b6ad.vercel.app/socket.io/socket.io.js"></script>
+
+
   <script>
-    const socket = io(); // Connect to the server
+    const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app'); // Client-side connection
+    // Connect to the server
     let localStream;
     let peerConnection;
     const remoteAudio = document.getElementById('remoteAudio');
@@ -117,4 +126,5 @@
     });
   </script>
 </body>
+
 </html>
