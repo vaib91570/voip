@@ -134,44 +134,97 @@
 
 //-----
 
-const express = require('express');
-const http = require('http');
-const socketIo = require('socket.io');
+// const express = require('express');
+// const http = require('http');
+// const socketIo = require('socket.io');
+// // const cors = require('cors');
 // const cors = require('cors');
-const cors = require('cors');
-app.use(cors({
-  origin: 'https://voip-dzlyt0ldy-vaibs-projects-4538b6ad.vercel.app', // Frontend URL
-  methods: ['GET', 'POST'],
-}));
+// app.use(cors({
+//   origin: 'https://voip-dzlyt0ldy-vaibs-projects-4538b6ad.vercel.app', // Frontend URL
+//   methods: ['GET', 'POST'],
+// }));
 
 
-const app = express();
-const server = http.createServer(app);
+// const app = express();
+// const server = http.createServer(app);
+// // const io = socketIo(server, {
+// //   cors: {
+// //     origin: 'https://voip-git-main-vaibs-projects-4538b6ad.vercel.app', // Ensure this is the correct origin
+// //     methods: ['GET', 'POST'],
+// //   },
+// // });
 // const io = socketIo(server, {
 //   cors: {
-//     origin: 'https://voip-git-main-vaibs-projects-4538b6ad.vercel.app', // Ensure this is the correct origin
+//     origin: 'https://voip-dzlyt0ldy-vaibs-projects-4538b6ad.vercel.app', // Frontend URL
 //     methods: ['GET', 'POST'],
 //   },
 // });
+
+
+// // Handle socket connections
+// io.on('connection', (socket) => {
+//   console.log('A user connected');
+
+//   // const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app');
+//   const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app');
+  
+//   socket.on('connect', () => {
+//     console.log('Connected to server');
+//   });
+
+
+//   // Handle offer
+//   socket.on('offer', (offer) => {
+//     console.log('Received offer:', offer);
+//     socket.broadcast.emit('offer', offer); // Broadcast offer to other clients
+//   });
+
+//   // Handle answer
+//   socket.on('answer', (answer) => {
+//     console.log('Received answer:', answer);
+//     socket.broadcast.emit('answer', answer); // Broadcast answer to other clients
+//   });
+
+//   // Handle ICE candidate
+//   socket.on('new-ice-candidate', (candidate) => {
+//     console.log('Received ICE candidate:', candidate);
+//     socket.broadcast.emit('new-ice-candidate', candidate); // Broadcast ICE candidate to other clients
+//   });
+
+//   // Handle disconnect
+//   socket.on('disconnect', () => {
+//     console.log('User disconnected');
+//   });
+// });
+
+// // Start server
+// const PORT = process.env.PORT || 3000;
+// server.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
+const express = require('express');
+const http = require('http');
+const socketIo = require('socket.io');
+const cors = require('cors');
+
+const app = express();
+const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'https://voip-dzlyt0ldy-vaibs-projects-4538b6ad.vercel.app', // Frontend URL
+    origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Use environment variable for flexibility
     methods: ['GET', 'POST'],
   },
 });
 
+// Apply global CORS middleware
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  methods: ['GET', 'POST'],
+}));
 
 // Handle socket connections
 io.on('connection', (socket) => {
   console.log('A user connected');
-
-  // const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app');
-  const socket = io('https://voip-git-main-vaibs-projects-4538b6ad.vercel.app');
-  
-  socket.on('connect', () => {
-    console.log('Connected to server');
-  });
-
 
   // Handle offer
   socket.on('offer', (offer) => {
